@@ -1,0 +1,113 @@
+Function TCVN3toUNICODE_Mix(ByVal vnStr As String) As String
+    Static map As Object
+    Dim i As Integer, c As String, result As String
+
+    If map Is Nothing Then
+        Set map = CreateObject("Scripting.Dictionary")
+      ' a, a, â
+        map.Add "¸", ChrW(225)    ' á
+        map.Add "µ", ChrW(224)    ' à
+        map.Add "¶", ChrW(7843)   ' ?
+        map.Add "·", ChrW(227)    ' ã
+        map.Add "¹", ChrW(7841)   ' ?
+        map.Add "¨", ChrW(259)    ' a
+        map.Add "¾", ChrW(7855)
+        map.Add "»", ChrW(7857)
+        map.Add "¼", ChrW(7859)
+        map.Add "½", ChrW(7861)
+        map.Add "Æ", ChrW(7863)
+        map.Add "©", ChrW(226)    ' â
+        map.Add "Ê", ChrW(7845)
+        map.Add "Ç", ChrW(7847)
+        map.Add "È", ChrW(7849)
+        map.Add "É", ChrW(7851)
+        map.Add "Ë", ChrW(7853)
+
+        ' e, ê
+        map.Add "Ð", ChrW(233)    ' é
+        map.Add "Ì", ChrW(232)    ' è
+        map.Add "Î", ChrW(7867)
+        map.Add "Ï", ChrW(7869)
+        map.Add "Ñ", ChrW(7865)
+        map.Add "ª", ChrW(234)    ' ê
+        map.Add "Õ", ChrW(7871)
+        map.Add "Ò", ChrW(7873)
+        map.Add "Ó", ChrW(7875)
+        map.Add "Ô", ChrW(7877)
+        map.Add "Ö", ChrW(7879)
+
+        ' o, ô, o
+        map.Add "ã", ChrW(243)    ' ó
+        map.Add "ß", ChrW(242)    ' ò
+        map.Add "á", ChrW(7887)
+        map.Add "â", ChrW(245)    ' õ
+        map.Add "ä", ChrW(7885)
+        map.Add "«", ChrW(244)    ' ô
+        map.Add "è", ChrW(7889)
+        map.Add "å", ChrW(7891)
+        map.Add "æ", ChrW(7893)
+        map.Add "ç", ChrW(7895)
+        map.Add "é", ChrW(7897)
+        map.Add "¬", ChrW(417)    ' o
+        map.Add "í", ChrW(7899)
+        map.Add "ê", ChrW(7901)
+        map.Add "ë", ChrW(7903)
+        map.Add "ì", ChrW(7905)
+        map.Add "î", ChrW(7907)
+
+        ' i
+        map.Add "Ý", ChrW(237)    ' í
+        map.Add "×", ChrW(236)    ' ì
+        map.Add "Ø", ChrW(7881)
+        map.Add "Ü", ChrW(297)
+        map.Add "Þ", ChrW(7883)
+
+        ' u, u
+        map.Add "ó", ChrW(250)    ' ú
+        map.Add "ï", ChrW(249)    ' ù
+        map.Add "ñ", ChrW(7911)
+        map.Add "ò", ChrW(361)
+        map.Add "ô", ChrW(7909)
+        map.Add "ø", ChrW(7913)
+        map.Add "õ", ChrW(7915)
+        map.Add "ö", ChrW(7917)
+        map.Add "÷", ChrW(7919)
+        map.Add "ù", ChrW(7921)
+
+        ' y
+        map.Add "ý", ChrW(253)    ' ý
+        map.Add "ú", ChrW(7923)
+        map.Add "û", ChrW(7927)
+        map.Add "ü", ChrW(7929)
+        map.Add "þ", ChrW(7925)
+
+        ' d, Ð, Â, A, Ê, Ô, O, U
+        map.Add "®", ChrW(273)    ' d
+        map.Add "¡", ChrW(258)    ' A
+        map.Add "¢", ChrW(194)    ' Â
+        map.Add "£", ChrW(202)    ' Ê
+        map.Add "¤", ChrW(212)    ' Ô
+        map.Add "¥", ChrW(416)    ' O
+        map.Add "¦", ChrW(431)    ' U
+        map.Add "§", ChrW(272)    ' Ð
+    End If
+
+result = ""
+
+    For i = 1 To Len(vnStr)
+        c = Mid(vnStr, i, 1)
+        
+        Select Case AscW(c)
+            Case 173 ' chu "u" viet rieng vi loi
+                result = result & ChrW(432)
+            Case Else
+                If map.exists(c) Then
+                    result = result & map(c)
+                Else
+                    result = result & c
+                End If
+        End Select
+    Next i
+    
+    TCVN3toUNICODE_Mix = result
+End Function
